@@ -1,10 +1,11 @@
-const mongoose = require('mongoose');
-const userService = require('../services/UserService');
+import mongoose from 'mongoose';
+import userService from '../services/UserService.js';
+
 
 // Aqui estamos criando um middleware, que literalmente é um interceptador
 
 // Função para validar o ID
-const validId = (req, res, next) => {
+export const validId = (req, res, next) => {
     try {
         // Receber um ID
         const id = req.params.id;
@@ -23,7 +24,7 @@ const validId = (req, res, next) => {
 }
 
 // Função para validar se registro existe
-const validUser = async (req, res, next) => {
+export const validUser = async (req, res, next) => {
     try {
         // Receber um ID
         const id = req.params.id;
@@ -45,5 +46,5 @@ const validUser = async (req, res, next) => {
 
 }
 
-module.exports = { validId, validUser };
+
 

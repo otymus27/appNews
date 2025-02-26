@@ -1,5 +1,6 @@
 // Importar o service para acessar o banco de dados
-const UserService = require("../services/UserService");
+import UserService from "../services/UserService.js";
+
 
 // const mongoose = require("mongoose");
 
@@ -129,9 +130,4 @@ const editar = async (req, res) => {
 
 }
 
-
-
-
-
-
-module.exports = { create, listar, buscarPorId, excluir, editar }
+export default { create, listar, buscarPorId, excluir, editar }

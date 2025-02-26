@@ -1,11 +1,11 @@
 // Incluir as bibliotecas
 // Gerencia as requisições, rotas e URLs, entre outra funcionalidades
-const express = require('express');
-//importando a rota 
-const userRoute = require('./routes/user.route');
 
+import express from 'express';
+import userRoute from './routes/user.route.js';
 //Importando modulo de conexão do banco de dados
-const db = require('./database/database');
+import db from './database/database.js';
+
 
 
 // Chamar a função express

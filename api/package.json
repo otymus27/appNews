@@ -2,6 +2,7 @@
   "name": "appblog",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon ./index.js localhost 3000",
     "dev": "nodemon index",

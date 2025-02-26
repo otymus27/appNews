@@ -1,4 +1,5 @@
-const User = require("../models/User");
+import User from "../models/User.js";
+
 
 const create = (body) => User.create(body);
 
@@ -14,6 +15,4 @@ const editar = (id, nome, login, senha, email, foto, background) => User.findOne
 );
 
 
-
-
-module.exports = { create, listar, buscarPorId, editar, excluir };
+export default { create, listar, buscarPorId, editar, excluir };

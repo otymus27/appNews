@@ -1,21 +1,22 @@
-const route = require('express').Router();
-const userControle = require('../controllers/user.controller');
-const { validId, validUser } = require('../middleware/global.middleware');
+import express from 'express';
+import userControle from '../controllers/user.controller.js';
+import { validId, validUser } from '../middleware/global.middleware.js';
 
+const router = express.Router();
 
 // Rota para criar registro
-route.post("/", userControle.create);
+router.post("/", userControle.create);
 
 // Rota para listar registros
-route.get("/", userControle.listar);
+router.get("/", userControle.listar);
 
 // Rota para buscar registros por id
-route.get("/:id",validId, validUser, userControle.buscarPorId);
+router.get("/:id",validId, validUser, userControle.buscarPorId);
 
 // Rota para excluir registro por id
-route.delete("/:id", userControle.excluir);
+router.delete("/:id", userControle.excluir);
 
 // Rota para atualizar um registro por id
-route.patch("/:id", validId, validUser, userControle.editar);
+router.patch("/:id", validId, validUser, userControle.editar);
 
-module.exports = route;
+export default router;
