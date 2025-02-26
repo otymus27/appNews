@@ -6,9 +6,14 @@ const listar = () => User.find();
 
 const buscarPorId = (id) => User.findById(id);
 
-const editar = (id, body) => User.findByIdAndUpdate(id, body, { new: true });
-
 const excluir = (id) => User.findByIdAndDelete(id);
 
+const editar = (id, nome, login, senha, email, foto, background) => User.findOneAndUpdate(
+     { _id: id },
+     { nome, login, senha, email, foto, background },
+);
 
-module.exports = { create , listar, buscarPorId, editar, excluir};
+
+
+
+module.exports = { create, listar, buscarPorId, editar, excluir };

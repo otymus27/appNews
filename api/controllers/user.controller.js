@@ -1,7 +1,7 @@
 // Importar o service para acessar o banco de dados
 const UserService = require("../services/UserService");
 
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
 
 // Função para cadastrar registros
@@ -54,13 +54,35 @@ const buscarPorId = async(req, res) => {
      // Aqui passamos o parâmetro para rota
      const id = req.params.id;
 
+     // Verificar se o parâmetro está correto - está comentado pois estamos usando middleware para isso
+     // if (!mongoose.Types.ObjectId.isValid(id)) {
+     //      return res.status(400).send({ message: "ID inválido!" });
+    // }
+
+     // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
+     const user = await UserService.buscarPorId(id);
+
+     // Verificar se existe algum registro vindo do banco de dados - está comentado pois estamos usando middleware para isso
+     // if (!user) {
+     //      return res.status(400).send({ message: "Nenhum registro cadastrado!" });
+     // }
+
+     //
+     res.status(200).send(user);
+}
+
+// Função para excluir registros por ID
+const excluir = async(req, res) => {
+     // Aqui passamos o parâmetro para rota
+     const id = req.params.id;
+
      // Verificar se o parâmetro está correto
      if (!mongoose.Types.ObjectId.isValid(id)) {
           return res.status(400).send({ message: "ID inválido!" });
      }
 
      // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
-     const user = await UserService.buscarPorId(id);
+     const user = await UserService.excluir(id);
 
      // Verificar se existe algum registro vindo do banco de dados
      if (!user) {
@@ -71,7 +93,43 @@ const buscarPorId = async(req, res) => {
      res.status(200).send(user);
 }
 
+// Função para cadastrar registros
+const editar = async(req, res) => {
+     //Receber os dados de um formulário e desmembrar os dados
+     const {nome, login, senha, email, foto, background} = req.body;   
+
+     // Aqui passamos o parâmetro para rota
+      const id = req.params.id;
+
+      // Verificar se o parâmetro está correto - está comentado pois estamos usando middleware para isso
+     //  if (!mongoose.Types.ObjectId.isValid(id)) {
+     //       return res.status(400).send({ message: "ID inválido!" });
+     //  }
+
+     // Validar dados - está comentado pois estamos usando middleware para isso
+     // if(!nome && !login && !senha && !email && !foto && !background){
+     //      res.status(400).send({"message":"Preencher pelo menos um campo para atualizar!"});          
+     // }
+
+     // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
+     const user = await UserService.buscarPorId(id);
+
+     // Verificar se existe algum registro vindo do banco de dados - está comentado pois estamos usando middleware para isso
+   /*   if (!user) {
+          return res.status(400).send({ message: "Nenhum registro cadastrado!" });
+     } */
+
+     // Aqui chamamos o service para atualizar o registro no banco de dados, passando o id e os dados
+     await UserService.editar(id, nome, login, senha, email, foto, background);
+
+
+      // Resposta para o cliente
+      res.status(200).send({message: "Registro atualizado com sucesso!"});
+}
+
+
+
      
 
 
-module.exports = { create, listar, buscarPorId }
+module.exports = { create, listar, buscarPorId,excluir, editar }
