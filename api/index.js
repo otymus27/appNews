@@ -1,14 +1,14 @@
 // Incluir as bibliotecas
 // Gerencia as requisições, rotas e URLs, entre outra funcionalidades
 const express = require('express');
+//importando a rota 
+const userRoute = require('./routes/user.route');
 
 // Chamar a função express
 const app = express();
 
-app.get("/", (req, res) =>{
-     res.send("Rodando servidor backend na porta 3001!")   
-     console.log("Rodando servidor backend na porta 3001!")  
-})
+// Usando a rota
+app.use("/soma", userRoute)
 
 app.listen(3001);
 
