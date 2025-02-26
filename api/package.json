@@ -1,0 +1,20 @@
+{
+  "name": "appblog",
+  "version": "1.0.0",
+  "main": "index.js",
+  
+  "scripts": {
+    "start": "nodemon ./index.js localhost 3000",
+    "dev": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fábio Rocha",
+  "license": "ISC",
+  "description": "API para SPA Noticias",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
