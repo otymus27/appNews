@@ -6,6 +6,9 @@ import userRoute from './routes/user.route.js';
 //Importando modulo de conexão do banco de dados
 import db from './database/database.js';
 
+// Módulo para uso de variaveis globais
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 // Chamar a função express
@@ -22,7 +25,7 @@ db();
 
 
 // Variável para porta
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => console.log(`Rodando servidor backend na porta ${port}`));
 

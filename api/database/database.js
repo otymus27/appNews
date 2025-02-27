@@ -20,9 +20,7 @@ const db = () => {
 
      console.log("Esperando conectar ao banco de dados!");
 
-
-     mongoose.connect('mongodb://admin:123@localhost:27017/db_noticias?authSource=admin')
-     //mongoose.connect('mongodb://admin:123@localhost:27017?authSource=admin')
+     mongoose.connect( process.env.MONGODB_URI)     
      .then(() =>console.log("Conectado ao banco de dados!"))
      .catch(error => console.log(error));
      
