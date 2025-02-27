@@ -130,3 +130,57 @@ Validar formulário
 
 Permitir requisição externa
 ### npm install cors
+
+
+--GitHUB
+1 - Criar um Repositório no GitHub
+- Acesse GitHub e faça login.
+- Clique no botão "New repository" (Novo Repositório).
+- Escolha um nome para o repositório.
+- Não marque "Initialize this repository with a README", pois vamos inicializar localmente.
+- Clique em "Create repository".
+
+2 - Configurar o Git no VS Code
+1 - Verique se o Git está instalado
+2 - No terminal do VS Code, execute:
+### git --version
+
+Se não aparecer uma versão, baixe e instale o Git.
+
+2 - configure seu usuário e e-mail
+### git config --global user.name "SeuNome"
+### git config --global user.email "seuemail@example.com"
+
+3 - Inicializar o Repositório Local
+- Abra o terminal no VS Code (CRTL + `)
+- Acesse a pasta do seu projeto:
+### cd caminho/do/seu/projeto
+- Inicialize o Git
+### git init
+- Adicione os arquivos ao controle de versão:
+### git add .
+- Faça o primeiro commit:
+### git commit -m "Primeira commit"
+- Agora, conecte seu repositório local ao GitHub:
+- Copie o link do repositório no GitHub (ele aparece depois de criar o repositório).Ex:
+### https://github.com/seuusuario/seu-repositorio.git
+- No terminal do VS Code, adicione o repositório remoto:
+### git remote add origin https://github.com/seuusuario/seurepositorio.git
+- Verifique se o remoto foi adicionado corretamente:
+### git remote -v
+- Deve aparecer algo como:
+### origin  https://github.com/seuusuario/seu-repositorio.git (fetch)
+### origin  https://github.com/seuusuario/seu-repositorio.git (push)
+
+5 - Enviar o Código para ao GitHub
+- Agora, envie os arquivos para o repositório remoto:
+### git branch -M main
+### git push -u origin main
+- Se for solicitado, faça login no GitHub.
+
+Atualizar o repositório quando quiser enviar mudanças, use:
+### git add .
+### git commit -m "Descrição das mudanças"
+### git push origin main
+
+

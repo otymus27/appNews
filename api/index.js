@@ -9,6 +9,7 @@ import db from './database/database.js';
 // Importando rotas de acesso
 import userRoute from './routes/user.route.js';
 import loginRoute from './routes/login.route.js';
+import noticiasRoute from './routes/noticias.route.js';
 
 
 // Módulo para uso de variaveis globais
@@ -25,6 +26,7 @@ app.use(express.json());
 // Usando as rotas
 app.use("/user", userRoute);
 app.use("/login", loginRoute);
+app.use("/noticias", noticiasRoute);
 
 
 // Chamando a função para conectar ao banco de dados
