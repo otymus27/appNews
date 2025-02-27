@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
 
 
 const UserSchema = new mongoose.Schema({
@@ -29,6 +31,12 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+// Aqui é feita a criptografia da senha
+UserSchema.pre('save', async function (next) {
+  this.senha = await bcrypt.hash(this.senha, 10);
+  next();
+})
 
 const User = mongoose.model('User', UserSchema);
 
