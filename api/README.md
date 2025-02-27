@@ -40,6 +40,9 @@ Depois fazer a importação no index.js para fazer uso
 Depois colocar essa linha de código
 ### dotenv.config();
 
+Instalar a dependencia para fazer autenticação usando JWT
+### npm install jsonwebtoken
+
 
 
 

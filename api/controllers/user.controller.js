@@ -1,9 +1,5 @@
-// Importar o service para acessar o banco de dados
+// Importar módulo responsável pela comunicação com o banco de dados
 import UserService from "../services/UserService.js";
-
-
-// const mongoose = require("mongoose");
-
 
 // Função para cadastrar registros
 const create = async (req, res) => {

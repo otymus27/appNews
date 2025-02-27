@@ -1,10 +1,15 @@
-// Incluir as bibliotecas
-// Gerencia as requisições, rotas e URLs, entre outra funcionalidades
-
+// Incluir as bibliotecas e imports
+// Biblioteca para gerenciar as requisições, rotas e URLs, entre outra funcionalidades
 import express from 'express';
-import userRoute from './routes/user.route.js';
+
 //Importando modulo de conexão do banco de dados
 import db from './database/database.js';
+
+
+// Importando rotas de acesso
+import userRoute from './routes/user.route.js';
+import loginRoute from './routes/login.route.js';
+
 
 // Módulo para uso de variaveis globais
 import dotenv from 'dotenv';
@@ -17,8 +22,10 @@ const app = express();
 //Habilita o envio de arquivos json
 app.use(express.json());
 
-// Usando a rota
+// Usando as rotas
 app.use("/user", userRoute);
+app.use("/login", loginRoute);
+
 
 // Chamando a função para conectar ao banco de dados
 db();
