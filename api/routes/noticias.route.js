@@ -11,6 +11,10 @@ router.post("/", autenticacao, noticiasControle.create);
 // Rota para listar registros
 router.get("/", noticiasControle.listar);
 
+// Rota diferencia para listar primeiro item de uma lista destaque
+router.get("/top", noticiasControle.topNews);
+
+
 // Rota para buscar registros por id
 //router.get("/:id",validId, validUser, noticiasControle.buscarPorId);
 

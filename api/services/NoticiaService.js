@@ -2,7 +2,17 @@ import Noticias from "../models/Noticias.js";
 
 const create = (body) => Noticias.create(body);
 
-const listar = (offset,limit) => Noticias.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
+const listar = (offset, limit) => Noticias.find().limit(limit).skip(offset).sort( { titulo: -1 });
+
+//listagem com dados dos usuarios
+//const listar = (offset, limit) => Noticias.find().limit(limit).skip(offset).sort( { titulo: -1 }).populate("user");
+
+// Função para contar registros
+const contarRegistros = () => Noticias.countDocuments();
+
+// Função para trazer primeiro registro da lista em ordem descrescente
+const topNews = () => Noticias.findOne().sort({_id: -1}).populate("user");;
+
 
 const buscarPorId = (id) => Noticias.findById(id);
 
@@ -14,4 +24,4 @@ const editar = (id, titulo, texto, banner, user, likes, comments) => Noticias.fi
 );
 
 
-export default { create, listar, buscarPorId, editar, excluir };
+export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews };

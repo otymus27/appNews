@@ -1,6 +1,7 @@
 // Importar módulo responsável pela comunicação com o banco de dados
-//import UserService from "../services/UserService.js";
 import NoticiaService from "../services/NoticiaService.js";
+import contarRegistros from "../services/NoticiaService.js";
+
 
 // Função para cadastrar registros
 const create = async (req, res) => {
@@ -72,19 +73,79 @@ const listar = async (req, res) => {
           }        
 
           // Variável para receber um conjunto de registros ou array
-          const noticias = await NoticiaService.listar(limit,offset);
+          const noticias = await NoticiaService.listar(offset,limit);
+
+          const totalRegistro = await NoticiaService.contarRegistros();
+          console.log(totalRegistro)
+          const paginaAtual = req.baseUrl;
+          console.log(paginaAtual)
+
+          const next = offset + limit;
+
+          const nextPage = next < totalRegistro ? `${paginaAtual}?limit=${limit}&offset=${next} ` : null;
+
+          const previous = offset - limit < 0 ?null: offset - limit;
+          const previousPage = previous ? `${paginaAtual}?limit=${limit}&offset=${previous}` : null;
+
 
           if (noticias.length === 0) {
                return res.status(400).send({ message: "Nenhum registro cadastrado!" });
           }
 
-          // Resposta para o cliente
-          res.status(200).send(noticias);
+          // Resposta para o cliente enviando um objeto
+          res.status(200).send({               
+               nextPage,
+               previousPage,
+               limit,
+               offset,
+               totalRegistro,
+               results: noticias.map((noticia) => ({
+                    id: noticia.id,
+                    titulo: noticia.titulo,
+                    texto: noticia.texto,
+                    banner: noticia.banner,
+                    nome: noticia.user.name,
+                    username: noticia.user.username,
+                    likes: noticias.likes,
+                    comments: noticias.comments,
+               }))                                    
+          });          
 
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
 
+}
+
+// Função para buscar o primeiro dado de uma lista no banco de dados
+const topNews = async (req, res) =>{
+     try {
+          const noticias = await NoticiaService.topNews();
+
+          if (!noticias) {
+               return res.status(400).send({ message: "Nenhum registro cadastrado!" });
+          }
+
+          // Resposta para o cliente enviando um objeto
+          res.status(200).send({
+               noticias:{
+                    id: noticias.id,
+                    titulo: noticias.titulo,
+                    texto: noticias.texto,
+                    banner: noticias.banner,
+                    likes: noticias.likes,
+                    comments: noticias.comments,
+                    nome: noticias.user.nome,
+                    username: noticias.user.username,
+               },
+          });
+          
+     }
+     catch(error){
+          res.status(500).send({ message: error.message });
+     }
+
+    
 }
 
 // Função para buscar registros por ID
@@ -154,4 +215,4 @@ const editar = async (req, res) => {
 
 }
 
-export default { create, listar, buscarPorId, excluir, editar }
+export default { create, listar, buscarPorId, excluir, editar, topNews }
