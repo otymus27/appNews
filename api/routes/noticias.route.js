@@ -16,7 +16,7 @@ router.get("/top", noticiasControle.topNews);
 
 
 // Rota para buscar registros por id
-//router.get("/:id",validId, validUser, noticiasControle.buscarPorId);
+router.get("/:id",noticiasControle.buscarPorId);
 
 // Rota para excluir registro por id
 //router.delete("/:id", noticiasControle.excluir);

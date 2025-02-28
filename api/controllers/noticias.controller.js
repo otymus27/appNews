@@ -25,23 +25,7 @@ const create = async (req, res) => {
 
           });
 
-          res.send(201);
-
-          // if (!noticias) {
-          //      return res.status(400).send({ message: "Erro ao criar registro!" })
-          // }
-
-          // Resposta para o cliente
-          // res.status(201).send({
-          //      noticias: {                    
-          //           titulo,
-          //           texto,
-          //           banner,   
-          //           user: { _id:"67c0438995bd43a2066f1203" },   
-          //      },
-          //      message: "Registro criado com sucesso!"
-          // });
-
+          res.send(201);         
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
@@ -50,8 +34,6 @@ const create = async (req, res) => {
 
 // Função para leitura de registros
 const listar = async (req, res) => {
-
-
      try {
           // Variável para receber um query params vindo da requisição
           let {limit, offset} = req.query;
@@ -104,10 +86,10 @@ const listar = async (req, res) => {
                     titulo: noticia.titulo,
                     texto: noticia.texto,
                     banner: noticia.banner,
-                    nome: noticia.user.name,
-                    username: noticia.user.username,
-                    likes: noticias.likes,
-                    comments: noticias.comments,
+                    nome: noticia.user.nome,
+                    login: noticia.user.login,
+                    likes: noticia.likes,
+                    comments: noticia.comments,
                }))                                    
           });          
 
@@ -136,7 +118,7 @@ const topNews = async (req, res) =>{
                     likes: noticias.likes,
                     comments: noticias.comments,
                     nome: noticias.user.nome,
-                    username: noticias.user.username,
+                    login: noticias.user.login,
                },
           });
           
@@ -152,13 +134,25 @@ const topNews = async (req, res) =>{
 const buscarPorId = async (req, res) => {
      try {
           // Aqui passamos o parâmetro para rota
-          const id = req.params.id;
+          const {id} = req.params;
+          console.log(id);
 
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
-          const user = await UserService.buscarPorId(id);
+          const noticia = await NoticiaService.buscarPorId(id);
 
-          // Resposta para o cliente
-          res.status(200).send(user);
+          // Resposta para o cliente enviando um objeto
+          res.status(200).send({
+               noticia:{
+                    id: noticia.id,
+                    titulo: noticia.titulo,
+                    texto: noticia.texto,
+                    banner: noticia.banner,
+                    likes: noticia.likes,
+                    comments: noticia.comments,
+                    nome: noticia.user.nome,
+                    username: noticia.user.username,
+               },
+          });
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
