@@ -20,7 +20,7 @@ const create = async (req, res) => {
                titulo,
                texto,
                banner,   
-               user: { _id:"67c0438995bd43a2066f1203" },
+               user: req.userId,
 
           });
 
@@ -52,8 +52,27 @@ const listar = async (req, res) => {
 
 
      try {
+          // Variável para receber um query params vindo da requisição
+          let {limit, offset} = req.query;
+          
+          // Aqui fazemos a um cast de string para number
+          limit = Number(limit);
+          offset = Number(offset);
+
+          console.log(limit, offset)
+
+          // Quantidade de registros por pagina
+          if(!limit){
+               limit = 5;
+          }
+
+          // Aqui é quantos itens será pulado
+          if(!offset){
+               offset = 0;
+          }        
+
           // Variável para receber um conjunto de registros ou array
-          const noticias = await NoticiaService.listar();
+          const noticias = await NoticiaService.listar(limit,offset);
 
           if (noticias.length === 0) {
                return res.status(400).send({ message: "Nenhum registro cadastrado!" });

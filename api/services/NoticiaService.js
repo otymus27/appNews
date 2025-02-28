@@ -2,7 +2,7 @@ import Noticias from "../models/Noticias.js";
 
 const create = (body) => Noticias.create(body);
 
-const listar = () => Noticias.find();
+const listar = (offset,limit) => Noticias.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
 
 const buscarPorId = (id) => Noticias.findById(id);
 

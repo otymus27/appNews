@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import userService from "../services/UserService.js";
+
 
 dotenv.config();
 
@@ -28,18 +30,26 @@ function verificarToken(req, res, next) {
       return res.status(401).send({ message: "sem autorizacao!" });
     }
 
-    jwt.verify(token, process.env.SECRET_JWT, (error, decoded) => {
-        if (error) {
-            return res.status(401).json({ error: "Token invalido!" });
-        }    
-      console.log(decoded);
-    });
+    jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
+      if (error) {
+        return res.status(401).send({ error: "Token invalido!" });
+      }
 
-    next();
+      const user = await userService.buscarPorId(decoded.id);
+
+      if (!user || !user.id) {
+        return res.status(401).send({ error: "Token invalido!" });
+      }
+
+      req.userId = user._id;
+      req.userNome = decoded.nome;
+      return next();
+    });
+    
   } catch (error) {
-    return res.status(401).json({ error: "Token invalido!" });
+    return res.status(401).send({ error: "Token invalido!" });
   }
-  
+
 }
 
 export default verificarToken;
