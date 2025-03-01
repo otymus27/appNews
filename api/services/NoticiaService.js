@@ -14,7 +14,14 @@ const contarRegistros = () => Noticias.countDocuments();
 const topNews = () => Noticias.findOne().sort({_id: -1}).populate("user");;
 
 // Função para buscar registros por ID usando populate para trazer dados do usuario tambem, tabela estrangeira
-const buscarPorId = (id) => Noticias.findById(id).populate("user");;
+const buscarPorId = (id) => Noticias.findById(id).populate("user");
+
+// Função para buscar registros por titulo usando populate para trazer dados do usuario tambem, tabela estrangeira
+const buscarPorTitulo = (titulo) => 
+     Noticias.find({
+     titulo: {$regex: `${titulo || ""}`,$options: "i"},     
+}).sort({_id: -1}).populate("user");
+
 
 const excluir = (id) => Noticias.findByIdAndDelete(id);
 
@@ -24,4 +31,4 @@ const editar = (id, titulo, texto, banner, user, likes, comments) => Noticias.fi
 );
 
 
-export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews };
+export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo };

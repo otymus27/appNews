@@ -130,6 +130,40 @@ const topNews = async (req, res) =>{
     
 }
 
+// Função para buscar registros por Titulo
+const buscarPorTitulo = async (req, res) => {
+     try {
+          // Aqui passamos o parâmetro por query para rota
+          const {titulo} = req.query;
+          console.log(titulo);
+
+          // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
+          const noticias = await NoticiaService.buscarPorTitulo(titulo);
+
+          // Aqui fazemos uma validação
+          if(noticias.length ===0){
+               return res.status(400).send({ message: "Nenhum registro cadastrado nesta busca!" });
+          }
+
+          // Resposta para o cliente enviando um objeto
+          res.status(200).send({
+               results: noticias.map((noticia) => ({
+                    id: noticia._id,
+                    titulo: noticia.titulo,
+                    texto: noticia.texto,
+                    banner: noticia.banner,
+                    nome: noticia.user.nome,
+                    login: noticia.user.login,
+                    likes: noticia.likes,
+                    comments: noticia.comments,
+               }))     
+          });
+     } catch (error) {
+          res.status(500).send({ message: error.message });
+     }
+
+}
+
 // Função para buscar registros por ID
 const buscarPorId = async (req, res) => {
      try {
@@ -140,10 +174,15 @@ const buscarPorId = async (req, res) => {
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
           const noticia = await NoticiaService.buscarPorId(id);
 
+          // Verificar se existe algum registro vindo do banco de dados
+          if (!noticia) {
+               return res.status(400).send({ message: "Nenhum registro cadastrado!" });
+          }
+
           // Resposta para o cliente enviando um objeto
           res.status(200).send({
                noticia:{
-                    id: noticia.id,
+                    id: noticia._id,
                     titulo: noticia.titulo,
                     texto: noticia.texto,
                     banner: noticia.banner,
@@ -209,4 +248,4 @@ const editar = async (req, res) => {
 
 }
 
-export default { create, listar, buscarPorId, excluir, editar, topNews }
+export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo }
