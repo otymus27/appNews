@@ -32,6 +32,7 @@ const editar = (id, titulo, texto, banner) => Noticias.findOneAndUpdate(
      { titulo, texto, banner },
 );
 
+// Funçao para fazer delete de registros
 const excluir = (id) => Noticias.findByIdAndDelete(id);
 
 

@@ -24,10 +24,10 @@ router.get("/:noticiasPorUsuario",autenticacao, noticiasControle.buscarNoticiasP
 router.get("/:id",autenticacao, validId,validUser,noticiasControle.buscarPorId);
 
 // Rota para atualizar um registro por id
-router.patch("/:id", autenticacao, noticiasControle.editar);
+router.patch("/:id", autenticacao, validId, noticiasControle.editar);
 
-// Rota para excluir registro por id
-//router.delete("/:id", noticiasControle.excluir);
+// Rota para excluir registro por id com autenticação
+router.delete("/:id", autenticacao, validId, noticiasControle.excluir);
 
 
 

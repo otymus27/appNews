@@ -221,28 +221,25 @@ const excluir = async (req, res) => {
           // Aqui passamos o parâmetro para rota
           const id = req.params.id;
 
-          // Verificar se o parâmetro está correto
-          if (!mongoose.Types.ObjectId.isValid(id)) {
-               return res.status(400).send({ message: "ID inválido!" });
-          }
+          // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
+          const noticias = await NoticiaService.buscarPorId(id);
 
-          // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
-          const user = await UserService.excluir(id);
+          if (noticias.user.id != req.userId) {
+               return res.status(400).send({ message: "Você não tem permissão para excluir este registro!" });
+          }        
 
-          // Verificar se existe algum registro vindo do banco de dados
-          if (!user) {
-               return res.status(400).send({ message: "Nenhum registro cadastrado!" });
-          }
+          // Aqui chamamos o service para excluir o registro no banco de dados, passando o id e os dados
+          await NoticiaService.excluir(id);
 
           // Resposta para o cliente
-          res.status(200).send(user);
+          res.status(200).send({ message: "Registro excluido com sucesso!" });
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
 
 }
 
-// Função para editarr registros
+// Função para editar registros
 const editar = async (req, res) => {
      try {
           //Receber os dados de um formulário através do body e descontruir por que o body é um objeto
