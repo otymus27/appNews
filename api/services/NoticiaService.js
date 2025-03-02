@@ -51,7 +51,31 @@ const excluirLikes = (id,userId) => Noticias.findOneAndUpdate(
      { $pull: { likes: {userId } } },
 );
 
+// Função para adicionar comentarios em uma noticia
+const inserirComentario = (id, userId, comentario) => {
+     //Criamos uma variavel para gerar o id para o comentario
+     const idComentario = Math.floor(Date.now() * Math.random()).toString(30); 
+     console.log(id)
+     console.log(userId)
+     console.log(comentario)
+     
 
+     return Noticias.findOneAndUpdate(
+          { _id: id },
+          { $push: { comments: {idComentario, userId, comentario, created: new Date() } } },
+     );
+}
 
+// Função para excluir comentarios em uma noticia
+const excluirComentario = (idNoticia, idComentario, userId) => {
+     console.log(idNoticia)
+     console.log(idComentario)
+     console.log(userId)
+    Noticias.findOneAndUpdate(
+          { _id: idNoticia },
+          { $pull: { comments: {idComentario, userId} } },
+     );
 
-export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo, buscarNoticiasPorUsuario, inserirLikes, excluirLikes };
+}
+
+export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo, buscarNoticiasPorUsuario, inserirLikes, excluirLikes, inserirComentario, excluirComentario };

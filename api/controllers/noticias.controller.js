@@ -283,8 +283,7 @@ const inserirLikes = async (req, res) => {
 
           // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
           const likesNoticia = await NoticiaService.inserirLikes(id, userId);
-          console.log(likesNoticia);  
-
+        
           // Caso usuario clique novamente ou chame a função
           if (!likesNoticia) {
                await NoticiaService.excluirLikes(id, userId);
@@ -296,7 +295,62 @@ const inserirLikes = async (req, res) => {
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
+}
+
+// Função para inserir comentario nas noticias - especifica
+const inserirComentario = async (req, res) => {
+     try {
+          // Aqui recebemos um id da noticia e passamos como parâmetro para rota
+          const {id} = req.params;
+          // Aqui recebemos um id do usuario que está fazendo o comentario e passamos como parâmetro para rota
+          const userId = req.userId
+          // Aqui recebemos o comentario vindo do body da requisição
+          const  comentario  = req.body;
+
+          // Valida se tem comentario para adicionar
+          if (!comentario) {              
+               return res.status(400).send({ message: "Comentário não pode ser vazio!" });
+          }
+
+          // Aqui chamamos o service para inserir o registro no banco de dados, passando os parametros
+          await NoticiaService.inserirComentario(id, comentario, userId);                 
+         
+          // Resposta para o cliente
+          res.status(200).send({ message: "ok comentario inserido com sucesso!" });
+     } catch (error) {
+          res.status(500).send({ message:"Opa cai no catch, algo errado: "+ error.message });
+     }
 
 }
 
-export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario,inserirLikes }
+// Função para excluir comentario nas noticias - especifica
+const excluirComentario = async (req, res) => {
+     try {
+          // Aqui recebemos um id da noticia e do comentario e passamos como parâmetros para rota
+          const {idNoticia, idComentario} = req.params;
+          // Aqui recebemos um id do usuario que está fazendo o comentario e passamos como parâmetro para rota
+          const userId = req.userId;
+       
+          // Aqui chamamos o service para inserir o registro no banco de dados, passando os parametros
+          //const comentariosDelete = await NoticiaService.excluirComentario(idNoticia, idComentario ,userId);       
+          
+          //const comentariosProcura = await NoticiaService.buscarPorId(idNoticia);
+
+          const excluirComentario = await NoticiaService.excluirComentario(idNoticia, idComentario, userId);
+          
+          console.log(excluirComentario);
+
+          // if(!comentariosDelete.comments.userId !=userId){
+          //      return res.status(400).send({ message: "Você não tem permissão para excluir este comentario!" })
+          // }
+ 
+         
+          // Resposta para o cliente
+          return res.status(200).send({ message: "ok comentario excluido com sucesso!" });
+     } catch (error) {
+          res.status(500).send({ message:"Opa cai no catch, algo errado: "+ error.message });
+     }
+
+}
+
+export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario,inserirLikes,inserirComentario,excluirComentario }

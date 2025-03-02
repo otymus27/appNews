@@ -29,8 +29,14 @@ router.patch("/:id", autenticacao, validId, validNoticia, noticiasControle.edita
 // Rota para excluir registro por id com autenticação
 router.delete("/:id", autenticacao, validId, validNoticia, noticiasControle.excluir);
 
-// Rota para dar likes ou rota de edição
+// Rota para dar likes ou deslikes 
 router.patch("/likes/:id", autenticacao, validId, validNoticia, noticiasControle.inserirLikes);
+
+// Rota para adicionar comentarios
+router.patch("/comentarios/:id", autenticacao, validNoticia, noticiasControle.inserirComentario);
+
+// Rota para excluir comentarios mandando dois parametros
+router.patch("/comentarios/:idNoticia/:idComentario", autenticacao, noticiasControle.excluirComentario);
 
 
 
