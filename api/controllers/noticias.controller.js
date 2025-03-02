@@ -159,7 +159,7 @@ const buscarPorTitulo = async (req, res) => {
 const buscarPorId = async (req, res) => {
      try {
           // Aqui passamos o parâmetro para rota
-          // const {id} = req.params;
+          const {id} = req.params;
           // console.log(id);
 
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
@@ -245,17 +245,26 @@ const excluir = async (req, res) => {
 // Função para editarr registros
 const editar = async (req, res) => {
      try {
-          //Receber os dados de um formulário e desmembrar os dados
-          const { nome, login, senha, email, foto, background } = req.body;
+          //Receber os dados de um formulário através do body e descontruir por que o body é um objeto
+          const { titulo, texto, banner } = req.body;
 
           // Aqui passamos o parâmetro para rota
           const id = req.params.id;
 
+          // Validar dados
+          if (!titulo && !texto && !banner) {
+               res.status(400).send({ "message": "Preencher pelo menos um dos campos!" });
+          }
+
           // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
-          const user = await UserService.buscarPorId(id);
+          const noticias = await NoticiaService.buscarPorId(id);
+
+          if (noticias.user.id != req.userId) {
+               return res.status(400).send({ message: "Você não tem permissão para editar este registro!" });
+          }        
 
           // Aqui chamamos o service para atualizar o registro no banco de dados, passando o id e os dados
-          await UserService.editar(id, nome, login, senha, email, foto, background);
+          await NoticiaService.editar(id, titulo, texto, banner);
 
           // Resposta para o cliente
           res.status(200).send({ message: "Registro atualizado com sucesso!" });
