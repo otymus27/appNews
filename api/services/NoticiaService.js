@@ -11,7 +11,7 @@ const listar = (offset, limit) => Noticias.find().limit(limit).skip(offset).sort
 const contarRegistros = () => Noticias.countDocuments();
 
 // Função para trazer primeiro registro da lista em ordem descrescente
-const topNews = () => Noticias.findOne().sort({_id: -1}).populate("user");;
+const topNews = () => Noticias.findOne().sort({_id: -1}).populate("user");
 
 // Função para buscar registros por ID usando populate para trazer dados do usuario tambem, tabela estrangeira
 const buscarPorId = (id) => Noticias.findById(id).populate("user");
@@ -23,6 +23,9 @@ const buscarPorTitulo = (titulo) =>
 }).sort({_id: -1}).populate("user");
 
 
+// Função para buscar registros por usuarios 
+const buscarNoticiasPorUsuario = (id) => Noticias.find({user: id}).sort({_id: -1}).populate("user");
+
 const excluir = (id) => Noticias.findByIdAndDelete(id);
 
 const editar = (id, titulo, texto, banner, user, likes, comments) => Noticias.findOneAndUpdate(
@@ -31,4 +34,4 @@ const editar = (id, titulo, texto, banner, user, likes, comments) => Noticias.fi
 );
 
 
-export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo };
+export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo, buscarNoticiasPorUsuario };

@@ -1,7 +1,5 @@
 // Importar módulo responsável pela comunicação com o banco de dados
 import NoticiaService from "../services/NoticiaService.js";
-import contarRegistros from "../services/NoticiaService.js";
-
 
 // Função para cadastrar registros
 const create = async (req, res) => {
@@ -42,8 +40,6 @@ const listar = async (req, res) => {
           limit = Number(limit);
           offset = Number(offset);
 
-          console.log(limit, offset)
-
           // Quantidade de registros por pagina
           if(!limit){
                limit = 5;
@@ -57,15 +53,10 @@ const listar = async (req, res) => {
           // Variável para receber um conjunto de registros ou array
           const noticias = await NoticiaService.listar(offset,limit);
 
-          const totalRegistro = await NoticiaService.contarRegistros();
-          console.log(totalRegistro)
-          const paginaAtual = req.baseUrl;
-          console.log(paginaAtual)
-
+          const totalRegistro = await NoticiaService.contarRegistros();        
+          const paginaAtual = req.baseUrl;    
           const next = offset + limit;
-
           const nextPage = next < totalRegistro ? `${paginaAtual}?limit=${limit}&offset=${next} ` : null;
-
           const previous = offset - limit < 0 ?null: offset - limit;
           const previousPage = previous ? `${paginaAtual}?limit=${limit}&offset=${previous}` : null;
 
@@ -168,8 +159,8 @@ const buscarPorTitulo = async (req, res) => {
 const buscarPorId = async (req, res) => {
      try {
           // Aqui passamos o parâmetro para rota
-          const {id} = req.params;
-          console.log(id);
+          // const {id} = req.params;
+          // console.log(id);
 
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
           const noticia = await NoticiaService.buscarPorId(id);
@@ -198,6 +189,32 @@ const buscarPorId = async (req, res) => {
 
 }
 
+// Função para buscar noticias por usuario - especifica da api
+const buscarNoticiasPorUsuario = async (req, res) => {
+     try {
+          // Aqui passamos o parâmetro para rota sem ser desconstruido pois está vindo direto do midlleware de autenticacao
+          const id = req.userId;        
+
+          const noticias = await NoticiaService.buscarNoticiasPorUsuario(id);        
+
+          // Resposta para o cliente enviando um objeto com varios registros
+          return res.status(200).send({
+               results: noticias.map((noticia) => ({
+                    id: noticia._id,
+                    titulo: noticia.titulo,
+                    texto: noticia.texto,
+                    banner: noticia.banner,
+                    nome: noticia.user.nome,
+                    login: noticia.user.login,
+                    likes: noticia.likes,
+                    comments: noticia.comments,
+               }))     
+          });
+          
+     }catch (error){
+          res.status(500).send({ message: error.message });
+     }
+}
 // Função para excluir registros por ID
 const excluir = async (req, res) => {
      try {
@@ -225,7 +242,7 @@ const excluir = async (req, res) => {
 
 }
 
-// Função para cadastrar registros
+// Função para editarr registros
 const editar = async (req, res) => {
      try {
           //Receber os dados de um formulário e desmembrar os dados
@@ -248,4 +265,4 @@ const editar = async (req, res) => {
 
 }
 
-export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo }
+export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario }
