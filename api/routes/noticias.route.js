@@ -1,6 +1,6 @@
 import express from 'express';
 import noticiasControle from '../controllers/noticias.controller.js';
-import { validId, validUser } from '../middleware/global.middleware.js';
+import { validId, validUser, validNoticia } from '../middleware/global.middleware.js';
 import autenticacao from '../middleware/autenticacao.middleware.js';
 
 const router = express.Router();
@@ -24,10 +24,13 @@ router.get("/:noticiasPorUsuario",autenticacao, noticiasControle.buscarNoticiasP
 router.get("/:id",autenticacao, validId,validUser,noticiasControle.buscarPorId);
 
 // Rota para atualizar um registro por id
-router.patch("/:id", autenticacao, validId, noticiasControle.editar);
+router.patch("/:id", autenticacao, validId, validNoticia, noticiasControle.editar);
 
 // Rota para excluir registro por id com autenticação
-router.delete("/:id", autenticacao, validId, noticiasControle.excluir);
+router.delete("/:id", autenticacao, validId, validNoticia, noticiasControle.excluir);
+
+// Rota para dar likes ou rota de edição
+router.patch("/likes/:id", autenticacao, validId, validNoticia, noticiasControle.inserirLikes);
 
 
 

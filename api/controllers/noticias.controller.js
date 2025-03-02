@@ -271,4 +271,32 @@ const editar = async (req, res) => {
 
 }
 
-export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario }
+// Função para inserir likes nas noticias - especifica
+const inserirLikes = async (req, res) => {
+     try {
+          //Receber os dados de um formulário através do body e descontruir por que o body é um objeto
+          const { likes } = req.body;
+
+          // Aqui passamos o parâmetro para rota
+          const {id} = req.params;
+          const userId = req.userId
+
+          // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
+          const likesNoticia = await NoticiaService.inserirLikes(id, userId);
+          console.log(likesNoticia);  
+
+          // Caso usuario clique novamente ou chame a função
+          if (!likesNoticia) {
+               await NoticiaService.excluirLikes(id, userId);
+               return res.status(200).send({ message: "Like removido com sucesso!" });
+          }
+         
+          // Resposta para o cliente
+          res.status(200).send({ message: "ok like inserido com sucesso!" });
+     } catch (error) {
+          res.status(500).send({ message: error.message });
+     }
+
+}
+
+export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario,inserirLikes }

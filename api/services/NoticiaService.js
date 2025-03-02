@@ -35,5 +35,23 @@ const editar = (id, titulo, texto, banner) => Noticias.findOneAndUpdate(
 // Funçao para fazer delete de registros
 const excluir = (id) => Noticias.findByIdAndDelete(id);
 
+// Função para inserir likes na noticia
+const inserirLikes = (id,userId) => Noticias.findOneAndUpdate(
+     // aqui é feito um filtro pra verificar se já foi dado like por este usuario
+     { _id: id, "likes.userId": { $nin: [userId] } },
+     //aqui fazemos um push no campo likes passando o id do usuario
+     { $push: { likes: {userId, created: new Date() } } },
+);
 
-export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo, buscarNoticiasPorUsuario };
+// Função para exclir ou desfazer likes na noticia
+const excluirLikes = (id,userId) => Noticias.findOneAndUpdate(
+     // aqui é feito um filtro pra verificar se já foi dado like por este usuario
+     { _id: id },
+     //aqui fazemos um pull no campo likes passando o id do usuario
+     { $pull: { likes: {userId } } },
+);
+
+
+
+
+export default { create, listar, buscarPorId, editar, excluir, contarRegistros, topNews, buscarPorTitulo, buscarNoticiasPorUsuario, inserirLikes, excluirLikes };
