@@ -18,12 +18,12 @@ const create = async (req, res) => {
           await NoticiaService.create({
                titulo,
                texto,
-               banner,   
+               banner,
                user: req.userId,
 
           });
 
-          res.send(201);         
+          res.send(201);
      } catch (error) {
           res.status(500).send({ message: error.message });
      }
@@ -34,30 +34,30 @@ const create = async (req, res) => {
 const listar = async (req, res) => {
      try {
           // Variável para receber um query params vindo da requisição
-          let {limit, offset} = req.query;
-          
+          let { limit, offset } = req.query;
+
           // Aqui fazemos a um cast de string para number
           limit = Number(limit);
           offset = Number(offset);
 
           // Quantidade de registros por pagina
-          if(!limit){
+          if (!limit) {
                limit = 5;
           }
 
           // Aqui é quantos itens será pulado
-          if(!offset){
+          if (!offset) {
                offset = 0;
-          }        
+          }
 
           // Variável para receber um conjunto de registros ou array
-          const noticias = await NoticiaService.listar(offset,limit);
+          const noticias = await NoticiaService.listar(offset, limit);
 
-          const totalRegistro = await NoticiaService.contarRegistros();        
-          const paginaAtual = req.baseUrl;    
+          const totalRegistro = await NoticiaService.contarRegistros();
+          const paginaAtual = req.baseUrl;
           const next = offset + limit;
           const nextPage = next < totalRegistro ? `${paginaAtual}?limit=${limit}&offset=${next} ` : null;
-          const previous = offset - limit < 0 ?null: offset - limit;
+          const previous = offset - limit < 0 ? null : offset - limit;
           const previousPage = previous ? `${paginaAtual}?limit=${limit}&offset=${previous}` : null;
 
 
@@ -66,7 +66,7 @@ const listar = async (req, res) => {
           }
 
           // Resposta para o cliente enviando um objeto
-          res.status(200).send({               
+          res.status(200).send({
                nextPage,
                previousPage,
                limit,
@@ -81,8 +81,8 @@ const listar = async (req, res) => {
                     login: noticia.user.login,
                     likes: noticia.likes,
                     comments: noticia.comments,
-               }))                                    
-          });          
+               }))
+          });
 
      } catch (error) {
           res.status(500).send({ message: error.message });
@@ -91,7 +91,7 @@ const listar = async (req, res) => {
 }
 
 // Função para buscar o primeiro dado de uma lista no banco de dados
-const topNews = async (req, res) =>{
+const topNews = async (req, res) => {
      try {
           const noticias = await NoticiaService.topNews();
 
@@ -101,7 +101,7 @@ const topNews = async (req, res) =>{
 
           // Resposta para o cliente enviando um objeto
           res.status(200).send({
-               noticias:{
+               noticias: {
                     id: noticias.id,
                     titulo: noticias.titulo,
                     texto: noticias.texto,
@@ -112,27 +112,27 @@ const topNews = async (req, res) =>{
                     login: noticias.user.login,
                },
           });
-          
+
      }
-     catch(error){
+     catch (error) {
           res.status(500).send({ message: error.message });
      }
 
-    
+
 }
 
 // Função para buscar registros por Titulo
 const buscarPorTitulo = async (req, res) => {
      try {
           // Aqui passamos o parâmetro por query para rota
-          const {titulo} = req.query;
+          const { titulo } = req.query;
           console.log(titulo);
 
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
           const noticias = await NoticiaService.buscarPorTitulo(titulo);
 
           // Aqui fazemos uma validação
-          if(noticias.length ===0){
+          if (noticias.length === 0) {
                return res.status(400).send({ message: "Nenhum registro cadastrado nesta busca!" });
           }
 
@@ -147,7 +147,7 @@ const buscarPorTitulo = async (req, res) => {
                     login: noticia.user.login,
                     likes: noticia.likes,
                     comments: noticia.comments,
-               }))     
+               }))
           });
      } catch (error) {
           res.status(500).send({ message: error.message });
@@ -159,7 +159,7 @@ const buscarPorTitulo = async (req, res) => {
 const buscarPorId = async (req, res) => {
      try {
           // Aqui passamos o parâmetro para rota
-          const {id} = req.params;
+          const { id } = req.params;
           // console.log(id);
 
           // Variável para receber o registro vindo do banco de dados, além de passarmos o parâmetro para função 
@@ -172,7 +172,7 @@ const buscarPorId = async (req, res) => {
 
           // Resposta para o cliente enviando um objeto
           res.status(200).send({
-               noticia:{
+               noticia: {
                     id: noticia._id,
                     titulo: noticia.titulo,
                     texto: noticia.texto,
@@ -193,9 +193,9 @@ const buscarPorId = async (req, res) => {
 const buscarNoticiasPorUsuario = async (req, res) => {
      try {
           // Aqui passamos o parâmetro para rota sem ser desconstruido pois está vindo direto do midlleware de autenticacao
-          const id = req.userId;        
+          const id = req.userId;
 
-          const noticias = await NoticiaService.buscarNoticiasPorUsuario(id);        
+          const noticias = await NoticiaService.buscarNoticiasPorUsuario(id);
 
           // Resposta para o cliente enviando um objeto com varios registros
           return res.status(200).send({
@@ -208,10 +208,10 @@ const buscarNoticiasPorUsuario = async (req, res) => {
                     login: noticia.user.login,
                     likes: noticia.likes,
                     comments: noticia.comments,
-               }))     
+               }))
           });
-          
-     }catch (error){
+
+     } catch (error) {
           res.status(500).send({ message: error.message });
      }
 }
@@ -226,7 +226,7 @@ const excluir = async (req, res) => {
 
           if (noticias.user.id != req.userId) {
                return res.status(400).send({ message: "Você não tem permissão para excluir este registro!" });
-          }        
+          }
 
           // Aqui chamamos o service para excluir o registro no banco de dados, passando o id e os dados
           await NoticiaService.excluir(id);
@@ -258,7 +258,7 @@ const editar = async (req, res) => {
 
           if (noticias.user.id != req.userId) {
                return res.status(400).send({ message: "Você não tem permissão para editar este registro!" });
-          }        
+          }
 
           // Aqui chamamos o service para atualizar o registro no banco de dados, passando o id e os dados
           await NoticiaService.editar(id, titulo, texto, banner);
@@ -271,25 +271,25 @@ const editar = async (req, res) => {
 
 }
 
-// Função para inserir likes nas noticias - especifica
+// Função para inserir e e excluir likes nas noticias - especifica
 const inserirLikes = async (req, res) => {
      try {
           //Receber os dados de um formulário através do body e descontruir por que o body é um objeto
           const { likes } = req.body;
 
           // Aqui passamos o parâmetro para rota
-          const {id} = req.params;
+          const { id } = req.params;
           const userId = req.userId
 
           // Aqui chamamos o service para buscarPorId o registro no banco de dados, passando o id 
           const likesNoticia = await NoticiaService.inserirLikes(id, userId);
-        
+
           // Caso usuario clique novamente ou chame a função
           if (!likesNoticia) {
                await NoticiaService.excluirLikes(id, userId);
                return res.status(200).send({ message: "Like removido com sucesso!" });
           }
-         
+
           // Resposta para o cliente
           res.status(200).send({ message: "ok like inserido com sucesso!" });
      } catch (error) {
@@ -301,24 +301,25 @@ const inserirLikes = async (req, res) => {
 const inserirComentario = async (req, res) => {
      try {
           // Aqui recebemos um id da noticia e passamos como parâmetro para rota
-          const {id} = req.params;
+          const { id } = req.params;
           // Aqui recebemos um id do usuario que está fazendo o comentario e passamos como parâmetro para rota
-          const userId = req.userId
-          // Aqui recebemos o comentario vindo do body da requisição
-          const  comentario  = req.body;
+          const userId = req.userId;
+          // Aqui recebemos o parametro descontruido, ou seja, em forma de campo, ao inves de objeto vindo do body da requisição
+
+          const { comments } = req.body;
 
           // Valida se tem comentario para adicionar
-          if (!comentario) {              
+          if (!comments) {
                return res.status(400).send({ message: "Comentário não pode ser vazio!" });
           }
 
           // Aqui chamamos o service para inserir o registro no banco de dados, passando os parametros
-          await NoticiaService.inserirComentario(id, comentario, userId);                 
-         
+          await NoticiaService.inserirComentario(id, userId, comments);
+
           // Resposta para o cliente
           res.status(200).send({ message: "ok comentario inserido com sucesso!" });
      } catch (error) {
-          res.status(500).send({ message:"Opa cai no catch, algo errado: "+ error.message });
+          res.status(500).send({ message: "Opa cai no catch, algo errado: " + error.message });
      }
 
 }
@@ -326,31 +327,54 @@ const inserirComentario = async (req, res) => {
 // Função para excluir comentario nas noticias - especifica
 const excluirComentario = async (req, res) => {
      try {
-          // Aqui recebemos um id da noticia e do comentario e passamos como parâmetros para rota
-          const {idNoticia, idComentario} = req.params;
-          // Aqui recebemos um id do usuario que está fazendo o comentario e passamos como parâmetro para rota
-          const userId = req.userId;
-       
-          // Aqui chamamos o service para inserir o registro no banco de dados, passando os parametros
-          //const comentariosDelete = await NoticiaService.excluirComentario(idNoticia, idComentario ,userId);       
-          
-          //const comentariosProcura = await NoticiaService.buscarPorId(idNoticia);
-
-          const excluirComentario = await NoticiaService.excluirComentario(idNoticia, idComentario, userId);
-          
-          console.log(excluirComentario);
-
-          // if(!comentariosDelete.comments.userId !=userId){
-          //      return res.status(400).send({ message: "Você não tem permissão para excluir este comentario!" })
-          // }
+         // Obtém os parâmetros da requisição
+         const { idNoticia, idComentario } = req.params;
+         const userId = req.userId;
  
+         // Validação de parâmetros obrigatórios
+         if (!idNoticia || !idComentario) {
+             return res.status(400).send({ message: "ID da notícia e do comentário são obrigatórios!" });
+         }
+ 
+         // Busca a notícia para verificar se o comentário existe antes de excluir
+         const noticia = await NoticiaService.buscarPorId(idNoticia);
          
-          // Resposta para o cliente
-          return res.status(200).send({ message: "ok comentario excluido com sucesso!" });
+         if (!noticia) {
+               console.log(!noticia)
+             return res.status(404).send({ message: "Notícia não encontrada!" });
+         }
+ 
+         // Garante que a lista de comentários seja um array válido
+         const todosComentarios = Array.isArray(noticia.comments) ? noticia.comments.flat(Infinity) : [];
+ 
+         // Busca o comentário específico pelo ID
+         const buscarComentario = todosComentarios.find(
+             (comentario) => String(comentario.idComentario) === String(idComentario)
+         );
+ 
+         // Se o comentário não for encontrado, retorna erro
+         if (!buscarComentario) {
+             return res.status(404).send({ message: "Comentário não encontrado!" });
+         }
+
+         console.log(buscarComentario)
+ 
+         // Verifica se o usuário tem permissão para excluir
+         if (String(buscarComentario.userId) !== String(userId)) {
+             return res.status(403).send({ message: "Você não tem permissão para excluir este comentário!" });
+         }       
+ 
+         // Agora, exclui o comentário
+         await NoticiaService.excluirComentario(idNoticia, idComentario, userId);
+ 
+         // Responde ao cliente informando sucesso
+         return res.status(200).send({ message: "Comentário excluído com sucesso!" });
+ 
      } catch (error) {
-          res.status(500).send({ message:"Opa cai no catch, algo errado: "+ error.message });
+         console.error("Erro ao excluir comentário:", error);
+         res.status(500).send({ message: "Ops! Erro ao excluir comentário: " + error.message });
      }
+ };
 
-}
 
-export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo,buscarNoticiasPorUsuario,inserirLikes,inserirComentario,excluirComentario }
+export default { create, listar, buscarPorId, excluir, editar, topNews, buscarPorTitulo, buscarNoticiasPorUsuario, inserirLikes, inserirComentario, excluirComentario }

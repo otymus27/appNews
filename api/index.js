@@ -10,6 +10,8 @@ import db from './database/database.js';
 import userRoute from './routes/user.route.js';
 import loginRoute from './routes/login.route.js';
 import noticiasRoute from './routes/noticias.route.js';
+import swaggerRoute from './routes/swagger.route.js';
+
 
 
 // Módulo para uso de variaveis globais
@@ -27,6 +29,8 @@ app.use(express.json());
 app.use("/user", userRoute);
 app.use("/login", loginRoute);
 app.use("/noticias", noticiasRoute);
+app.use("/doc", swaggerRoute);
+
 
 
 // Chamando a função para conectar ao banco de dados
