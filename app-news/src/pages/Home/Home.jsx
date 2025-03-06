@@ -1,7 +1,10 @@
+import { Navbar } from "../../components/NavBar/NavBar";
+
 export default function Home() {
   return (
     <>
-      <h1>Olá react</h1>
+          <Navbar />
+          <h1>Olá Home</h1>
     </>
   );
 }
