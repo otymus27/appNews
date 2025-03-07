@@ -1,10 +1,16 @@
+import { Card } from "../../components/Card/Card";
 import { Navbar } from "../../components/NavBar/Navbar";
+import { noticias } from "../../Datas";
 
 export default function Home() {
   return (
     <>
           <Navbar />
-          <h1>Olá Home</h1>          
+          {noticias.map((item, index)=>{
+            // aqui envio as noticias através das props
+            return <Card key={index} noticias = {item} />;
+          })}
+                 
     </>
   );
 }

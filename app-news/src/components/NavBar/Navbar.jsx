@@ -8,7 +8,7 @@ export function Navbar() {
     <>
       <Nav>
         <InputSpace>
-          <i class="bi bi-search"></i>
+          <i className="bi bi-search"></i>
           <input type="text" placeholder="Pesquisar por um título de notícia" />
         </InputSpace>
 
