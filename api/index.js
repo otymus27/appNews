@@ -13,10 +13,11 @@ import noticiasRoute from './routes/noticias.route.js';
 import swaggerRoute from './routes/swagger.route.js';
 
 
-
 // Módulo para uso de variaveis globais
 import dotenv from 'dotenv';
 dotenv.config();
+
+import cors from "cors";//compartilhamento de recursos diferentes entre o frontend com backend !!!muito importante!!!
 
 
 // Chamar a função express
@@ -25,11 +26,16 @@ const app = express();
 //Habilita o envio de arquivos json
 app.use(express.json());
 
+
+app.use(cors());//usamos aqui para liberar segurança da aplicação e tem que ser configurado antes de chamar as rotas
+
 // Usando as rotas
 app.use("/user", userRoute);
 app.use("/login", loginRoute);
 app.use("/noticias", noticiasRoute);
 app.use("/doc", swaggerRoute);
+
+
 
 
 
